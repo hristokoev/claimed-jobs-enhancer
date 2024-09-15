@@ -225,29 +225,29 @@
   // Function to select and click elements
   // THIS IS FETCHING AND IS SLOWER
   /*
-    async function selectAssets() {
-        const url = '/api/asset/claimed';
-        const data = await fetchWithSessionToken(url);
-        const assetPkIds = data.map(data => data.assetPKID).join(',');
-        const progressData = await fetchProgressData(assetPkIds);
+  async function selectAssets() {
+      const url = '/api/asset/claimed';
+      const data = await fetchWithSessionToken(url);
+      const assetPkIds = data.map(data => data.assetPKID).join(',');
+      const progressData = await fetchProgressData(assetPkIds);
 
-        if (!data) return;
+      if (!data) return;
 
-        // Group and sort data by comment
-        const filteredData = filterDataByProgress(data, progressData, true);
+      // Group and sort data by comment
+      const filteredData = filterDataByProgress(data, progressData, true);
 
-        // Generate element IDs and click each
-        filteredData.forEach(asset => {
-            const elementId = `jobs-claimed-assetPKID-${asset.assetPKID}01`;
-            const element = document.getElementById(elementId);
-            if (element) {
-                element.click();  // Simulate the click event
-            } else {
-                console.log(`Element with ID: ${elementId} not found.`);
-            }
-        });
-    }
-    */
+      // Generate element IDs and click each
+      filteredData.forEach(asset => {
+          const elementId = `jobs-claimed-assetPKID-${asset.assetPKID}01`;
+          const element = document.getElementById(elementId);
+          if (element) {
+              element.click();  // Simulate the click event
+          } else {
+              console.log(`Element with ID: ${elementId} not found.`);
+          }
+      });
+  }
+  */
 
   // THIS SHOULD BE FASTER SINCE IT'S NOT FETCHING
   async function selectAssets() {
@@ -258,12 +258,15 @@
 
     allAssets.forEach((asset) => {
       const progressBar = asset.children[1].children[0].children[0].children[0];
-      const elementId = `jobs-claimed-assetPKID-${asset.id.substring(
+      const elementSelectId = `jobs-claimed-select-${asset.id.substring(
         prefix.length
       )}`;
-      const element = document.getElementById(elementId);
+      const elementSelect = document.getElementById(elementSelectId);
+      const elementSelectCheckbox = elementSelect.children[0].children[0];
       if (progressBar.className.includes("ub-w_100prcn")) {
-        element.click();
+        !elementSelectCheckbox.checked && elementSelectCheckbox.click();
+      } else {
+        elementSelectCheckbox.checked && elementSelectCheckbox.click();
       }
     });
   }
